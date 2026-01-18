@@ -1,0 +1,106 @@
+===================================================
+CropVision Project - Power BI DAX Measures
+===================================================
+
+1. Production & Yield Measures
+------------------------------
+-- Total Production
+Total_Production = SUM(crop_model_data[production])
+
+-- Total Area
+Total_Area = SUM(crop_model_data[area])
+
+-- Average Yield (if yield exists)
+Average_Yield = AVERAGE(crop_model_data[yield])
+
+-- Calculated Yield (if yield needs calculation)
+Calculated_Yield =
+DIVIDE(
+    SUM(crop_model_data[production]),
+    SUM(crop_model_data[area])
+)
+
+2. Crop-wise and State-wise Yield
+---------------------------------
+-- Crop-wise Average Yield
+Crop_Avg_Yield =
+AVERAGEX(
+    VALUES(crop_model_data[crop]),
+    [Calculated_Yield]
+)
+
+-- State-wise Average Yield
+State_Avg_Yield =
+AVERAGEX(
+    VALUES(crop_model_data[state]),
+    [Calculated_Yield]
+)
+
+3. Soil Health Measures
+-----------------------
+-- Average Nutrients
+Avg_Nitrogen = AVERAGE(crop_model_data[nitrogen])
+Avg_Phosphorus = AVERAGE(crop_model_data[phosphorus])
+Avg_Potassium = AVERAGE(crop_model_data[potassium])
+Avg_pH = AVERAGE(crop_model_data[ph])
+
+-- Soil Fertility Index
+Soil_Fertility_Index =
+AVERAGE(crop_model_data[nitrogen]) * 0.4 +
+AVERAGE(crop_model_data[phosphorus]) * 0.3 +
+AVERAGE(crop_model_data[potassium]) * 0.3
+
+-- Nitrogen vs Yield Correlation
+N_Yield =
+SUMX(
+    crop_model_data,
+    crop_model_data[nitrogen] * crop_model_data[yield]
+)
+
+4. Weather Impact Measures
+--------------------------
+-- Average Temperature
+Avg_Temp = AVERAGE(crop_model_data[avg_temp_c])
+
+-- Total Rainfall
+Total_Rainfall = SUM(crop_model_data[total_rainfall_mm])
+
+-- Average Humidity
+Avg_Humidity = AVERAGE(crop_model_data[avg_humidity_percent])
+
+-- Rainfall Efficiency
+Rainfall_Efficiency = DIVIDE([Total_Production], [Total_Rainfall])
+
+5. Input Efficiency Measures
+----------------------------
+-- Fertilizer Efficiency
+Fertilizer_Efficiency =
+DIVIDE(
+    [Total_Production],
+    SUM(crop_model_data[fertilizer])
+)
+
+-- Pesticide Efficiency
+Pesticide_Efficiency =
+DIVIDE(
+    [Total_Production],
+    SUM(crop_model_data[pesticide])
+)
+
+6. Ranking Measures
+------------------
+-- State Ranking by Yield
+State_Yield_Rank =
+RANKX(
+    ALL(crop_model_data[state]),
+    [State_Avg_Yield],
+    ,
+    DESC
+)
+
+-- Crop Ranking by Yield
+Crop_Yield_Rank =
+RANKX(
+    ALL(crop_model_data[crop]),
+    [Crop_Avg_Yield]
+)
