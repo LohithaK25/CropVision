@@ -1,8 +1,3 @@
-Absolutely! Here’s a **ready-to-use `README.md`** for your CropVision project that you can **copy and paste directly** into your repo. I’ve formatted it cleanly with proper Markdown for GitHub:
-
----
-
-````markdown
 # CropVision - Crop Yield Analysis Project
 
 ## Overview
